@@ -200,7 +200,7 @@ enum _9p_msg_t {
 };
 
 /**
- * This constant is used to use system.posix_acl_access pseudo xattr 
+ * This constant is used to use system.posix_acl_access pseudo xattr
  */
 #define ACL_ACCESS_XATTR_ID 0xFFFFFFFF
 
@@ -371,17 +371,10 @@ struct _9p_outqueue {
 	pthread_cond_t cond;
 };
 
-struct _9p_datalock {
-	msk_data_t *data;
-	msk_data_t *out;
-	pthread_mutex_t lock;
-};
-
 struct _9p_rdma_priv {
 	struct _9p_conn *pconn;
 	uint8_t *rdmabuf;
 	msk_data_t *rdata;
-	struct _9p_datalock *datalock;
 	struct _9p_outqueue *outqueue;
 	struct ibv_mr *outmr;
 };
@@ -392,7 +385,7 @@ struct _9p_request_data {
 	char *_9pmsg;
 	struct _9p_conn *pconn;
 #ifdef _USE_9P_RDMA
-	struct _9p_datalock *datalock;
+	msk_data_t *data;
 #endif
 	struct _9p_flush_hook flush_hook;
 };
@@ -578,6 +571,7 @@ void _9p_tools_fsal_attr2stat(struct attrlist *pfsalattr, struct stat *pstat);
 void _9p_tools_acess2fsal(u32 *paccessin, fsal_accessflags_t *pfsalaccess);
 void _9p_openflags2FSAL(u32 *inflags, fsal_openflags_t *outflags);
 void _9p_chomp_attr_value(char *str, size_t size);
+int _9p_tools_clunk(struct _9p_fid *pfid);
 void _9p_cleanup_fids(struct _9p_conn *conn);
 
 #ifdef _USE_9P_RDMA
